@@ -13,7 +13,7 @@ Playlist.belongsTo(User, {
   foreignKey: 'userId',
 });
 
-// Many-to-Many Relationship (your existing code is good)
+
 Playlist.belongsToMany(Track, {
   through: PlaylistTrack,
   foreignKey: 'playlistId',
@@ -24,7 +24,7 @@ Track.belongsToMany(Playlist, {
   foreignKey: 'trackId',
 });
 
-// ADDED: Direct associations to junction table for easier querying
+
 PlaylistTrack.belongsTo(Playlist, { foreignKey: 'playlistId' });
 PlaylistTrack.belongsTo(Track, { foreignKey: 'trackId' });
 Playlist.hasMany(PlaylistTrack, { foreignKey: 'playlistId' });

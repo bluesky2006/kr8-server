@@ -1,18 +1,19 @@
 // db/connection.js
 require('dotenv').config();
-console.log('Environment variables:');
-console.log('PGUSER:', process.env.PGUSER);
-console.log('PGPASSWORD:', process.env.PGPASSWORD ? '[SET]' : '[NOT SET]');
-console.log('PGHOST:', process.env.PGHOST);
-console.log('PGPORT:', process.env.PGPORT);
-console.log('PGDATABASE:', process.env.PGDATABASE);
+const path = require('path');
 const { Sequelize } = require('sequelize');
 
 const ENV = process.env.NODE_ENV || 'development';
+const pathToEnvFile = path.resolve(__dirname, `../../.env.${ENV}`);
+
+require('dotenv').config({
+  path: pathToEnvFile,
+});
+
 console.log(`Running in ${ENV} mode`);
 
-if (ENV === 'development') {
-  process.env.PGDATABASE = 'kr8_database';
+if (!process.env.PGDATABASE) {
+  throw new Error('No PGDATABASE configured');
 }
 
 // Debug: Check what values are being used

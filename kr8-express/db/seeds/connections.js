@@ -16,15 +16,24 @@ if (!process.env.PGDATABASE) {
   throw new Error('No PGDATABASE configured');
 }
 
-// sequelize pool
-const sequelize = new Sequelize({
+// Debug: Check what values are being used
+console.log('Database config:', {
   database: process.env.PGDATABASE,
-  username: process.env.PGUSER || 'joelkram',
-  password: process.env.PGPASSWORD || null,
+  username: process.env.PGUSER,
+  password: process.env.PGPASSWORD ? '[SET]' : '[NOT SET]',
   host: process.env.PGHOST || 'localhost',
-  port: process.env.PGPORT || 5432,
-  dialect: 'postgres',
-  logging: false,
 });
+
+const sequelize = new Sequelize(
+  process.env.PGDATABASE, // database name
+  null, // username (null = use system default)
+  null, // password (null = no password)
+  {
+    // options object
+    host: 'localhost',
+    dialect: 'postgres',
+    logging: console.log,
+  }
+);
 
 module.exports = sequelize;

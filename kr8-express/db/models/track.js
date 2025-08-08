@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../seeds/connections');
 
-const Track = sequelize.define(
-  'Track',
-  {
+
+// Track Model
+exports.Track = (sequelize) => {
+  return sequelize.define('Track', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -17,14 +17,22 @@ const Track = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    track_image: {
-      type: DataTypes.BLOB('long'),
+    track_bpm: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
-  },
-  {
+    track_length: {
+      type: DataTypes.DECIMAL(10, 4), // Supports decimal seconds
+      allowNull: true,
+    },
+    track_image: {
+      type: DataTypes.BLOB('long'), 
+      allowNull: true,
+    },
+  }, {
     tableName: 'tracks',
-  }
-);
+    timestamps: true,
+  });
+};
 
-module.exports = Track;
+

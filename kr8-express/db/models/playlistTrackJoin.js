@@ -1,36 +1,42 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../seeds/connections');
 
-const PlaylistTrack = sequelize.define(
-  'PlaylistTrack',
-  {
+// Junction table for Playlist-Track many-to-many relationship
+exports.PlaylistTrack = (sequelize) => {
+  return sequelize.define('PlaylistTrack', {
     id: {
-      
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    playlistId: {
+    playlist_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Playlists',
+        model: 'playlists',
         key: 'id',
       },
     },
-    trackId: {
+    track_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Tracks',
+        model: 'tracks',
         key: 'id',
       },
     },
-  },
-  {
-    timestamps: false,
-    tableName: 'playlist_tracks', 
-  }
-);
+    playlist_position: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  }, {
+    tableName: 'playlist_tracks',
+    timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['playlist_id', 'playlist_position'], 
+      },
+    ],
+  });
+};
 
-module.exports = PlaylistTrack;

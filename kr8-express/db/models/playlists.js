@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../seeds/connections');
 
-const Playlist = sequelize.define(
-  'Playlist',
-  {
+
+// Playlist Model
+exports.Playlist = (sequelize) => {
+  return sequelize.define('Playlist', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -13,10 +13,26 @@ const Playlist = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-  },
-  {
+    playlist_notes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    playlist_image: {
+      type: DataTypes.BLOB('long'), 
+      allowNull: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+    },
+  }, {
     tableName: 'playlists',
-  }
-);
+    timestamps: true,
+  });
+};
 
-module.exports = Playlist;
+

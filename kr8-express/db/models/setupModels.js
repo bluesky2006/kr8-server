@@ -51,4 +51,3 @@ exports.setupAssociations = (models) => {
     as: 'playlistTracks',
   });
 };
-

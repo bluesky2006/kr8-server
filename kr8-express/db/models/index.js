@@ -1,9 +1,9 @@
 const db = require('../seeds/connections');
-const User = require('./users');
-const Playlist = require('./playlists');
-const Track = require('./track');
-const PlaylistTrack = require('./playlistTrackJoin');
-const {setupAssociations} = require('./setupModels');
+const User = require('./users').User(db);
+const Playlist = require('./playlists').Playlist(db);
+const Track = require('./track').Track(db);
+const PlaylistTrack = require('./playlistTrackJoin').PlaylistTrack(db);
+const { setupAssociations } = require('./setupModels');
 
 // Create models object
 const models = {
@@ -15,7 +15,6 @@ const models = {
 
 // Setup associations between models
 setupAssociations(models);
-
 
 const createTables = async (options = { force: false }) => {
   try {

@@ -1,3 +1,3 @@
-const user = {
+exports.user = {
   username: 'testGuy',
 };

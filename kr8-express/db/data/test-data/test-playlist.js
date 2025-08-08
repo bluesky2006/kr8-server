@@ -1,7 +1,7 @@
-export const testPlaylist = {
+exports.testPlaylist = {
   playlist_name: 'test-playlist',
   playlist_notes: 'this playlist is sick',
-  playlist_image: Uint8Array(96831)[(255, 200, 255, 100)],
+  playlist_image: new Uint8Array(96831)[(255, 200, 255, 100)],
   playlist_tracks: [
     {
       playlist_position: 1,
@@ -9,7 +9,7 @@ export const testPlaylist = {
       track_artist: 'Local Boy',
       track_bpm: 122,
       track_length: 383.0133333333333,
-      track_image: Uint8Array(96831)[(255, 120, 233, 252)],
+      track_image: new Uint8Array(96831)[(255, 120, 233, 252)],
     },
   ],
 };

@@ -1,7 +1,7 @@
 const db = require('../seeds/connections');
 const { User, Playlist, Track, PlaylistTrack } = require('../models/index');
 
-exports.seed = async ({ user, playlist }) => {
+seed = async ({ user, playlist }) => {
   try {
     //set up tables
 
@@ -9,3 +9,5 @@ exports.seed = async ({ user, playlist }) => {
     console.log(err);
   }
 };
+
+module.exports = seed;

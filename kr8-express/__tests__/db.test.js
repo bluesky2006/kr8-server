@@ -50,6 +50,30 @@ describe('testing database', () => {
       expect(playlist.id).toBe(1);
       expect(playlist.playlist_name).toBe('test-playlist');
       expect(playlist.playlist_notes).toBe('this playlist is sick');
+      playlists.forEach((playlist) => {
+        expect(typeof playlist.id).toBe('number');
+        expect(typeof playlist.playlist_name).toBe('string');
+        expect(typeof playlist.playlist_notes).toBe('string');
+      });
+    });
+  });
+  describe('tracks table', () => {
+    describe('track table exists', () => {
+      test('track table has length greater than 0', async () => {
+        const tracks = await Track.findAll();
+        expect(tracks).not.toHaveLength(0);
+      });
+    });
+    test('track table has correct properties', async () => {
+      const tracks = await Track.findAll();
+      tracks.forEach((track) => {
+        expect(typeof track.id).toBe('number');
+        expect(typeof track.track_title).toBe('string');
+        expect(typeof track.track_artist).toBe('string');
+        expect(typeof track.track_bpm).toBe('number');
+        expect(typeof track.track_length).toBe('string');
+        expect(typeof track.track_image).toBe('object');
+      });
     });
   });
 });

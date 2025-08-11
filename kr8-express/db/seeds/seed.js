@@ -26,7 +26,7 @@ seed = async ({ user, playlist }) => {
 
     // 2. Seed playlist (without tracks)
     const playlistData = extractPlaylist(playlist);
-    console.log(playlistData, 'in seed');
+    // console.log(playlistData, 'in seed');
     const createdPlaylist = await Playlist.create(playlistData);
 
     // 3. Seed tracks

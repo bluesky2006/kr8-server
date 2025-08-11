@@ -3,7 +3,7 @@ const {
   extractPlaylist,
 } = require('../lib/utils/extractTrackData');
 
-const testData = require('../db/data/test-data/index');
+const {user, playlist} = require('../db/data/test-data/index');
 describe('utils test', () => {
   describe('tests for extracting track data', () => {
     test('returns empty array when passed empty object', () => {
@@ -31,7 +31,7 @@ describe('utils test', () => {
         },
       ];
 
-      const actual = extractTracksFromPlaylist(testData.playlist.testPlaylist);
+      const actual = extractTracksFromPlaylist(playlist);
       expect(actual).toEqual(expected);
     });
 
@@ -58,7 +58,7 @@ describe('utils test', () => {
 describe('extractPlaylist function', () => {
   describe('when passed valid playlist data', () => {
     test('returns playlist data without tracks array', () => {
-      const actual = extractPlaylist(testData.playlist.testPlaylist);
+      const actual = extractPlaylist(playlist);
 
       expect(actual).toMatchObject({
         playlist_name: 'test-playlist',

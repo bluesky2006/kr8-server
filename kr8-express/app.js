@@ -1,4 +1,4 @@
-const {getAllUsers, getUserById} = require('./controllers/getUsers.controller');
+const {getAllUsers, getUserById, getPlaylistsByUserId} = require('./controllers/getUsers.controller');
 
 const getAllPlaylists = require('./controllers/getPlaylists.controller');
 const getAllTracks = require('./controllers/getTracks.controller');
@@ -13,6 +13,9 @@ app.get('/', (req, res) => {
 //get users
 app.get('/api/users', getAllUsers);
 app.get('/api/users/:id', getUserById);
+
+//get playlists by user id
+app.get('/api/users/:id/playlists', getPlaylistsByUserId)
 
 //get playlists
 app.get('/api/playlists', getAllPlaylists);

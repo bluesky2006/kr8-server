@@ -1,4 +1,4 @@
-const { User } = require('../db/models/index');
+const { User, Playlist } = require('../db/models/index');
 const fetchUsers = async () => {
   try {
     const users = await User.findAll();
@@ -23,4 +23,24 @@ const fetchUserById = async (id) => {
   }
 };
 
-module.exports = { fetchUsers, fetchUserById };
+const fetchPlaylistsByUserId = async (id) => {
+  try {
+    const users = await User.findOne({
+      where: { id },
+      attributes: ['id', 'username'],
+      include: [
+        {
+          model: Playlist,
+          as: 'playlists',
+          attributes: ['id', 'playlist_name', 'playlist_notes', 'favourite'],
+        },
+      ],
+    });
+    // console.log(users.get({ plain: true })); //removes object fluff
+    return users ? users.get({ plain: true }) : null;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+module.exports = { fetchUsers, fetchUserById, fetchPlaylistsByUserId };

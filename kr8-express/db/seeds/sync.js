@@ -1,4 +1,5 @@
-const { sequelize } = require('../models/index');
+
+const { sequelize } = require('./connections');
 
 async function syncDatabase() {
   try {

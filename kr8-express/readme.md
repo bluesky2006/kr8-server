@@ -64,3 +64,11 @@ run seed
         datetime updatedAt
     }
 ```
+
+# todo
+
+add testing for endpoints
+add proper joins for queries playlist/tracks
+add post for all methods
+add intergration testing for all
+add endpoint docs

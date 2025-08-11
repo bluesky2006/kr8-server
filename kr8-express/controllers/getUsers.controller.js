@@ -1,4 +1,4 @@
-const fetchUsers = require('../models/fetchUsers.models');
+const { fetchUsers, fetchUserById } = require('../models/fetchUsers.models');
 const getAllUsers = async (req, res) => {
   try {
     console.log('inside users model');
@@ -14,11 +14,19 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
-    console.log('inside get user by id');
+
+    console.log(typeof id);
+    // validate id
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      res.status(400);
+      res.send('naughty!');
+    }
+    
+    const user = await fetchUserById(numericId);
     
     res.status(200);
-    res.send('');
+    res.send({ user });
   } catch (err) {
     console.log(err);
   }

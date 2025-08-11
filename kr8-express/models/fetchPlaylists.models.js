@@ -5,11 +5,20 @@ const fetchPlaylists = async () => {
     const playlistArray = playlist.map((playlist) => {
       return playlist.dataValues;
     });
-    console.log(playlistArray);
+    // console.log(playlistArray);
     return playlistArray;
   } catch (err) {
     console.log(err);
   }
 };
 
-module.exports = fetchPlaylists;
+const fetchPlaylistById = async (id) => {
+  try {
+    const playlist = await Playlist.findAll({ where: { id: id } });
+    console.log(playlist);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { fetchPlaylists, fetchPlaylistById };

@@ -92,15 +92,15 @@ RESTful API for managing users, playlists, and tracks with many-to-many relation
 ## Core Endpoints
 
 ### Users
-- **GET** `/users` - List all users (admin only)
+- **GET** `/users` - List all users (admin only) (added) no testing
 - **POST** `/users` - Create new user
-- **GET** `/users/:id` - Get user by ID
+- **GET** `/users/:id` - Get user by ID (added) no testing
 - **PUT** `/users/:id` - Update user
 - **DELETE** `/users/:id` - Delete user
-- **GET** `/users/:id/playlists` - Get all playlists for a user
+- **GET** `/users/:id/playlists` - Get all playlists for a user (added) no testing
 
 ### Tracks
-- **GET** `/tracks` - List all tracks (with pagination, search, filtering)
+- **GET** `/tracks` - List all tracks (with pagination, search, filtering) (added) no testing
 - **POST** `/tracks` - Upload/create new track
 - **GET** `/tracks/:id` - Get track details
 - **PUT** `/tracks/:id` - Update track metadata
@@ -109,7 +109,7 @@ RESTful API for managing users, playlists, and tracks with many-to-many relation
 - **GET** `/tracks/search` - Search tracks by title, artist, BPM range
 
 ### Playlists
-- **GET** `/playlists` - List playlists (public or user-specific)
+- **GET** `/playlists` - List playlists (public or user-specific) (added) no testing
 - **POST** `/playlists` - Create new playlist
 - **GET** `/playlists/:id` - Get playlist with tracks
 - **PUT** `/playlists/:id` - Update playlist metadata

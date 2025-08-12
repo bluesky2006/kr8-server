@@ -6,6 +6,10 @@ const {
 } = require('./controllers/getUsers.controller');
 
 const {
+  postNestedDataByUserId,
+} = require('./controllers/postUsers.controller');
+
+const {
   getAllPlaylists,
   getPlaylistById,
 } = require('./controllers/getPlaylists.controller');
@@ -13,6 +17,7 @@ const getAllTracks = require('./controllers/getTracks.controller');
 
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/endpoint.json');
@@ -28,7 +33,9 @@ app.get('/api/users/:id/playlists', getPlaylistsByUserId);
 
 //get full nested data
 app.get('/api/users/:id/playlists/:id/tracks', getNestedDataByUserId);
+
 //post full nested data
+app.post('/api/users/:id/playlists', postNestedDataByUserId);
 
 // ----- PLAYLISTS ------
 

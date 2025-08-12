@@ -104,9 +104,7 @@ RESTful API for managing users, playlists, and tracks with many-to-many relation
 - **DELETE** `/users/:id` - Delete user
 - **GET** `/users/:id/playlists` - Get all playlists for a user (added) no testing
 - **GET** `/users/:id/playlists/:id/tracks` - Get full nested data object for user (added) no testing
-
-
-
+- **POST** `/users/:id/playlists` - POST full nested data object for user (added) no testing
 
 ### Tracks
 

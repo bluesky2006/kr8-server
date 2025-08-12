@@ -99,9 +99,11 @@ RESTful API for managing users, playlists, and tracks with many-to-many relation
 - **DELETE** `/users/:id` - Delete user
 - **GET** `/users/:id/playlists` - Get all playlists for a user (added) no testing
 
+- get user/:id/playlist/:id **** get all tracks and all playlists at user id
+
 ### Tracks
 - **GET** `/tracks` - List all tracks (with pagination, search, filtering) (added) no testing
-- **POST** `/tracks` - Upload/create new track
+- **POST** `/tracks` - Upload/create new track ****
 - **GET** `/tracks/:id` - Get track details
 - **PUT** `/tracks/:id` - Update track metadata
 - **DELETE** `/tracks/:id` - Delete track
@@ -110,8 +112,9 @@ RESTful API for managing users, playlists, and tracks with many-to-many relation
 
 ### Playlists
 - **GET** `/playlists` - List playlists (public or user-specific) (added) no testing
-- **POST** `/playlists` - Create new playlist
+- **POST** `/playlists` - Create new playlist *****
 - **GET** `/playlists/:id` - Get playlist with tracks
+- **GET** `/playlists/:id/tracks` - Get playlist by id with all tracks ***
 - **PUT** `/playlists/:id` - Update playlist metadata
 - **DELETE** `/playlists/:id` - Delete playlist
 - **POST** `/playlists/:id/tracks` - Add track to playlist

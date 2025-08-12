@@ -1,7 +1,8 @@
-const { User, Playlist } = require('../db/models/index');
+const { models } = require('../db/models/index');
+const { Track } = require('../db/models/track');
 const fetchUsers = async () => {
   try {
-    const users = await User.findAll();
+    const users = await models.User.findAll();
     const usersArray = users.map((user) => {
       return user.dataValues;
     });
@@ -14,7 +15,7 @@ const fetchUsers = async () => {
 
 const fetchUserById = async (id) => {
   try {
-    const users = await User.findAll({ where: { id: id } });
+    const users = await models.User.findAll({ where: { id: id } });
     const user = users[0].dataValues;
 
     return user;
@@ -25,7 +26,7 @@ const fetchUserById = async (id) => {
 
 const fetchPlaylistsByUserId = async (id) => {
   try {
-    const users = await User.findOne({
+    const users = await models.User.findOne({
       where: { id },
       attributes: ['id', 'username'],
       include: [
@@ -43,6 +44,35 @@ const fetchPlaylistsByUserId = async (id) => {
   }
 };
 
-//get user id/playlists/:id/tracks
+//get user id/playlists/:id/tracks nested data
+const fetchNestedData = async (id) => {
+  try {
+    const data = await models.User.findOne({
+      where: { id },
+      attributes: ['id', 'username'],
+      include: [
+        {
+          model: models.Playlist,
+          as: 'playlists',
+          include: [
+            {
+              model: models.Track,
+              as: 'tracks',
+            },
+          ],
+        },
+      ],
+    });
+    
+    return data ? data.get({ plain: true }) : null; 
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-module.exports = { fetchUsers, fetchUserById, fetchPlaylistsByUserId };
+module.exports = {
+  fetchUsers,
+  fetchUserById,
+  fetchPlaylistsByUserId,
+  fetchNestedData,
+};

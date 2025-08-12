@@ -1,7 +1,7 @@
-const { Playlist } = require('../db/models/index');
+const { models } = require('../db/models/index');
 const fetchPlaylists = async () => {
   try {
-    const playlist = await Playlist.findAll();
+    const playlist = await models.Playlist.findAll();
     const playlistArray = playlist.map((playlist) => {
       return playlist.dataValues;
     });

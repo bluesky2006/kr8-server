@@ -1,7 +1,7 @@
-const { Track } = require('../db/models/index');
+const { models } = require('../db/models/index');
 const fetchTracks = async () => {
   try {
-    const tracks = await Track.findAll();
+    const tracks = await models.Track.findAll();
     const trackArray = tracks.map((track) => {
       return track.dataValues;
     });

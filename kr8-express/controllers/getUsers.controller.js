@@ -2,6 +2,7 @@ const {
   fetchUsers,
   fetchUserById,
   fetchPlaylistsByUserId,
+  fetchNestedData,
 } = require('../models/fetchUsers.models');
 const getAllUsers = async (req, res) => {
   try {
@@ -56,4 +57,30 @@ const getPlaylistsByUserId = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, getPlaylistsByUserId };
+const getNestedDataByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(typeof id);
+    // validate id
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      res.status(400);
+      res.send('naughty!');
+    }
+
+    const nestedData = await fetchNestedData(numericId);
+
+    res.status(200);
+    res.send({ nestedData });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  getPlaylistsByUserId,
+  getNestedDataByUserId,
+};

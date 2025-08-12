@@ -2,6 +2,7 @@ const {
   getAllUsers,
   getUserById,
   getPlaylistsByUserId,
+  getNestedDataByUserId,
 } = require('./controllers/getUsers.controller');
 
 const {
@@ -25,11 +26,17 @@ app.get('/api/users/:id', getUserById);
 //get playlists by user id
 app.get('/api/users/:id/playlists', getPlaylistsByUserId);
 
+//get full nested data
+app.get('/api/users/:id/playlists/:id/tracks', getNestedDataByUserId);
+//post full nested data
+
 // ----- PLAYLISTS ------
 
 //get playlists
 app.get('/api/playlists', getAllPlaylists);
 app.get('/api/playlists/:id', getPlaylistById);
+
+// ------ TRACKS ------
 
 //get tracks
 app.get('/api/tracks', getAllTracks);

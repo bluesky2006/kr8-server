@@ -1,13 +1,59 @@
-const fetchUsers = require('../models/fetchUsers.models');
+const {
+  fetchUsers,
+  fetchUserById,
+  fetchPlaylistsByUserId,
+} = require('../models/fetchUsers.models');
 const getAllUsers = async (req, res) => {
   try {
     console.log('inside users model');
     const users = await fetchUsers(); //usersArray
-    res.json({users});
+    res.status(200);
+    res.json({ users });
   } catch (err) {
     console.log(err);
     res.status(500).send('Server error');
   }
 };
 
-module.exports = getAllUsers;
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(typeof id);
+    // validate id
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      res.status(400);
+      res.send('naughty!');
+    }
+
+    const user = await fetchUserById(numericId);
+
+    res.status(200);
+    res.send({ user });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getPlaylistsByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(typeof id);
+    // validate id
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      res.status(400);
+      res.send('naughty!');
+    }
+    const playlistsByUserId = await fetchPlaylistsByUserId(numericId);
+    // console.log(playlistsByUserId);
+    res.status(200);
+    res.send({ playlistsByUserId });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { getAllUsers, getUserById, getPlaylistsByUserId };

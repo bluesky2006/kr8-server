@@ -1,0 +1,498 @@
+{
+  "endpoints": {
+    "users": {
+      "base": "/users",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/users",
+          "description": "Get all users",
+          "auth": "admin",
+          "params": {
+            "query": ["page", "limit", "sort", "order"]
+          },
+          "responses": {
+            "200": "List of users",
+            "401": "Unauthorized",
+            "403": "Forbidden"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/users",
+          "description": "Create new user",
+          "auth": "none",
+          "body": {
+            "username": "string (required, unique)"
+          },
+          "responses": {
+            "201": "User created",
+            "400": "Validation error",
+            "409": "Username already exists"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/users/:id",
+          "description": "Get user by ID",
+          "auth": "user_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "200": "User details",
+            "404": "User not found"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/users/:id",
+          "description": "Update user",
+          "auth": "user_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "username": "string (optional)"
+          },
+          "responses": {
+            "200": "User updated",
+            "404": "User not found",
+            "409": "Username already exists"
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/users/:id",
+          "description": "Delete user",
+          "auth": "user_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "204": "User deleted",
+            "404": "User not found"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/users/:id/playlists",
+          "description": "Get user's playlists",
+          "auth": "user_or_admin",
+          "params": {
+            "path": ["id"],
+            "query": ["page", "limit", "favourite"]
+          },
+          "responses": {
+            "200": "List of user's playlists",
+            "404": "User not found"
+          }
+        }
+      ]
+    },
+    "tracks": {
+      "base": "/tracks",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/tracks",
+          "description": "Get all tracks",
+          "auth": "none",
+          "params": {
+            "query": [
+              "page",
+              "limit",
+              "sort",
+              "order",
+              "artist",
+              "bpm_min",
+              "bpm_max",
+              "length_min",
+              "length_max",
+              "search"
+            ]
+          },
+          "responses": {
+            "200": "List of tracks"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/tracks",
+          "description": "Create new track",
+          "auth": "user",
+          "body": {
+            "track_title": "string (required)",
+            "track_artist": "string (required)",
+            "track_bpm": "integer (optional)",
+            "track_length": "decimal (optional)",
+            "track_image": "blob (optional)"
+          },
+          "responses": {
+            "201": "Track created",
+            "400": "Validation error"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/tracks/:id",
+          "description": "Get track by ID",
+          "auth": "none",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "200": "Track details",
+            "404": "Track not found"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/tracks/:id",
+          "description": "Update track",
+          "auth": "user",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "track_title": "string (optional)",
+            "track_artist": "string (optional)",
+            "track_bpm": "integer (optional)",
+            "track_length": "decimal (optional)"
+          },
+          "responses": {
+            "200": "Track updated",
+            "404": "Track not found"
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/tracks/:id",
+          "description": "Delete track",
+          "auth": "user_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "204": "Track deleted",
+            "404": "Track not found"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/tracks/:id/image",
+          "description": "Get track artwork",
+          "auth": "none",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "200": "Track image",
+            "404": "Track or image not found"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/tracks/:id/image",
+          "description": "Upload track artwork",
+          "auth": "user",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "image": "file (required, image formats)"
+          },
+          "responses": {
+            "200": "Image uploaded",
+            "404": "Track not found",
+            "400": "Invalid image format"
+          }
+        }
+      ]
+    },
+    "playlists": {
+      "base": "/playlists",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/playlists",
+          "description": "Get playlists",
+          "auth": "none",
+          "params": {
+            "query": ["page", "limit", "sort", "order", "user_id", "favourite"]
+          },
+          "responses": {
+            "200": "List of playlists"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/playlists",
+          "description": "Create new playlist",
+          "auth": "user",
+          "body": {
+            "playlist_name": "string (required)",
+            "playlist_notes": "text (optional)",
+            "playlist_image": "blob (optional)",
+            "favourite": "boolean (optional, default: false)"
+          },
+          "responses": {
+            "201": "Playlist created",
+            "400": "Validation error"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/playlists/:id",
+          "description": "Get playlist with tracks",
+          "auth": "none",
+          "params": {
+            "path": ["id"],
+            "query": ["include_tracks"]
+          },
+          "responses": {
+            "200": "Playlist details with tracks",
+            "404": "Playlist not found"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/playlists/:id",
+          "description": "Update playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "playlist_name": "string (optional)",
+            "playlist_notes": "text (optional)",
+            "favourite": "boolean (optional)"
+          },
+          "responses": {
+            "200": "Playlist updated",
+            "404": "Playlist not found",
+            "403": "Not authorized"
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/playlists/:id",
+          "description": "Delete playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "responses": {
+            "204": "Playlist deleted",
+            "404": "Playlist not found",
+            "403": "Not authorized"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/playlists/:id/tracks",
+          "description": "Get tracks in playlist",
+          "auth": "none",
+          "params": {
+            "path": ["id"],
+            "query": ["page", "limit"]
+          },
+          "responses": {
+            "200": "List of tracks in playlist order",
+            "404": "Playlist not found"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/playlists/:id/tracks",
+          "description": "Add track to playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "track_id": "integer (required)",
+            "position": "integer (optional, defaults to end)"
+          },
+          "responses": {
+            "201": "Track added to playlist",
+            "404": "Playlist or track not found",
+            "409": "Track already in playlist"
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/playlists/:id/tracks/:trackId",
+          "description": "Remove track from playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id", "trackId"]
+          },
+          "responses": {
+            "204": "Track removed from playlist",
+            "404": "Playlist, track, or association not found"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/playlists/:id/tracks/:trackId/position",
+          "description": "Change track position in playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id", "trackId"]
+          },
+          "body": {
+            "position": "integer (required)"
+          },
+          "responses": {
+            "200": "Track position updated",
+            "404": "Playlist, track, or association not found"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/playlists/:id/reorder",
+          "description": "Reorder all tracks in playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "track_order": "array of track IDs in new order"
+          },
+          "responses": {
+            "200": "Playlist reordered",
+            "404": "Playlist not found",
+            "400": "Invalid track order"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/playlists/:id/tracks/bulk",
+          "description": "Add multiple tracks to playlist",
+          "auth": "owner_or_admin",
+          "params": {
+            "path": ["id"]
+          },
+          "body": {
+            "track_ids": "array of track IDs",
+            "start_position": "integer (optional)"
+          },
+          "responses": {
+            "201": "Tracks added to playlist",
+            "404": "Playlist not found",
+            "400": "Invalid track IDs"
+          }
+        }
+      ]
+    },
+    "stats": {
+      "base": "/stats",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/stats/popular-tracks",
+          "description": "Get most popular tracks",
+          "auth": "none",
+          "params": {
+            "query": ["limit", "period"]
+          },
+          "responses": {
+            "200": "List of popular tracks with stats"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/stats/popular-playlists",
+          "description": "Get most popular playlists",
+          "auth": "none",
+          "params": {
+            "query": ["limit", "period"]
+          },
+          "responses": {
+            "200": "List of popular playlists with stats"
+          }
+        }
+      ]
+    }
+  },
+  "schemas": {
+    "User": {
+      "id": "integer (auto-increment)",
+      "username": "string (unique, required)",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
+    },
+    "Track": {
+      "id": "integer (auto-increment)",
+      "track_title": "string (required)",
+      "track_artist": "string (required)",
+      "track_bpm": "integer (optional)",
+      "track_length": "decimal (optional)",
+      "track_image": "blob (optional)",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
+    },
+    "Playlist": {
+      "id": "integer (auto-increment)",
+      "playlist_name": "string (required)",
+      "playlist_notes": "text (optional)",
+      "playlist_image": "blob (optional)",
+      "favourite": "boolean (default: false)",
+      "user_id": "integer (foreign key)",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
+    },
+    "PlaylistTrack": {
+      "id": "integer (auto-increment)",
+      "playlist_id": "integer (foreign key)",
+      "track_id": "integer (foreign key)",
+      "playlist_position": "integer (required)",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
+    }
+  },
+  "authentication": {
+    "types": {
+      "none": "No authentication required",
+      "user": "Authenticated user required",
+      "owner_or_admin": "Resource owner or admin required",
+      "admin": "Admin privileges required"
+    },
+    "implementation": "JWT tokens recommended"
+  },
+  "pagination": {
+    "default_limit": 20,
+    "max_limit": 100,
+    "response_format": {
+      "data": "array of results",
+      "pagination": {
+        "page": "current page",
+        "limit": "items per page",
+        "total": "total items",
+        "totalPages": "total pages"
+      }
+    }
+  },
+  "error_handling": {
+    "format": {
+      "success": false,
+      "error": {
+        "code": "string",
+        "message": "string",
+        "details": "object (optional)"
+      }
+    },
+    "status_codes": {
+      "200": "OK",
+      "201": "Created",
+      "204": "No Content",
+      "400": "Bad Request",
+      "401": "Unauthorized",
+      "403": "Forbidden",
+      "404": "Not Found",
+      "409": "Conflict",
+      "500": "Internal Server Error"
+    }
+  }
+}

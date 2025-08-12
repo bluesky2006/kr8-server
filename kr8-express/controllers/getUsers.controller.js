@@ -6,7 +6,6 @@ const {
 } = require('../models/fetchUsers.models');
 const getAllUsers = async (req, res) => {
   try {
-    console.log('inside users model');
     const users = await fetchUsers(); //usersArray
     res.status(200);
     res.json({ users });

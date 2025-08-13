@@ -25,7 +25,7 @@ exports.Playlist = (sequelize) => {
       favourite: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        default: false,
+        defaultValue: false,
       },
       user_id: {
         type: DataTypes.INTEGER,

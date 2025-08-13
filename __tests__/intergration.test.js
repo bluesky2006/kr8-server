@@ -77,4 +77,60 @@ describe('post test', () => {
         });
       });
   });
+  test('image is null still posts', async () => {
+    const testPlaylist = {
+      user_id: 1,
+      playlist_name: 'doIWork',
+      playlist_notes: 'please work',
+      playlist_image: null,
+      favourite: false,
+      playlist_tracks: [
+        {
+          playlist_position: 1,
+          track_title: 'Young Hearts',
+          track_artist: 'Cyndi Lauper',
+          track_bpm: 142,
+          track_length: 383.0133333333333,
+          track_image: null,
+        },
+        {
+          playlist_position: 2,
+          track_title: 'Wah wah wee wah',
+          track_artist: 'Hello',
+          track_bpm: 120,
+          track_length: 123,
+          track_image: null,
+        },
+      ],
+    };
+    await request(app)
+      .post('/api/users/1/playlists')
+      .send(testPlaylist)
+      .expect(201)
+      .set('Content-Type', 'application/json')
+      .then(({ body }) => {
+        console.log(body, 'answer from request');
+        const { playlist } = body;
+        expect(typeof playlist.id).toBe('number');
+        expect(typeof playlist.playlist_name).toBe('string');
+        expect(typeof playlist.playlist_notes).toBe('string');
+        expect(playlist.playlist_image).toBe(null);
+        expect(typeof playlist.favourite).toBe('boolean');
+        expect(typeof playlist.user_id).toBe('number');
+        expect(typeof playlist.createdAt).toBe('string');
+        expect(typeof playlist.updatedAt).toBe('string');
+        expect(typeof playlist.tracks).toBe('object');
+        playlist.tracks.forEach((track) => {
+          console.log(track);
+          expect(typeof track.id).toBe('number');
+          expect(typeof track.track_title).toBe('string');
+          expect(typeof track.track_artist).toBe('string');
+          expect(typeof track.track_bpm).toBe('number');
+          expect(track.track_image).toBe(null);
+          expect(typeof track.createdAt).toBe('string');
+          expect(typeof track.updatedAt).toBe('string');
+          expect(typeof track.id).toBe('number');
+        });
+      });
+  });
 });

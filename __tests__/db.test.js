@@ -71,6 +71,7 @@ describe('testing database', () => {
         expect(typeof track.track_title).toBe('string');
         expect(typeof track.track_artist).toBe('string');
         expect(typeof track.track_bpm).toBe('number');
+        expect(typeof track.favourite).toBe('boolean');
         expect(typeof track.track_length).toBe('string');
         expect(typeof track.track_image).toBe('object');
       });

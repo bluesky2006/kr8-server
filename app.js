@@ -10,10 +10,22 @@ const {
   getPlaylistById,
 } = require('./controllers/getPlaylists.controller');
 const getAllTracks = require('./controllers/getTracks.controller');
-const playlistRouter = require('./routes/playlist.route');
+
+const multer = require('multer');
+const upload = multer({
+  limits: {
+    fieldSize: 10 * 1024 * 1024, // 10MB for field values (your JSON)
+    fileSize: 50 * 1024 * 1024, // 50MB for individual files
+    files: 100, // Max number of files
+    fields: 100, // Max number of non-file fields
+  },
+});
 
 const express = require('express');
 const cors = require('cors');
+const {
+  postNestedDataByUserId,
+} = require('./controllers/postUsers.controller');
 const app = express();
 app.use(express.json());
 
@@ -36,7 +48,7 @@ app.get('/api/users/:id/playlists/:id/tracks', getNestedDataByUserId);
 // fix params on this, must be unique eg :userId and :playlistId
 
 //post full nested data
-app.use('/', playlistRouter);
+app.post('/api/users/:id/playlists', upload.any(), postNestedDataByUserId);
 
 // ----- PLAYLISTS ------
 

@@ -164,19 +164,20 @@ app.get("/playlists/:playlistId", async (req, res) => {
 
   const tracks = await pool.query(
     `
-    select
-      playlist_position,
-      track_artist,
-      track_title,
-      track_bpm,
-      track_length,
-      favourite,
-      track_image_mime,
-      track_image_base64
-    from playlist_tracks
-    where playlist_id = $1
-    order by playlist_position asc
-    `,
+  select
+    id,
+    playlist_position,
+    track_artist,
+    track_title,
+    track_bpm,
+    track_length,
+    favourite,
+    track_image_mime,
+    track_image_base64
+  from playlist_tracks
+  where playlist_id = $1
+  order by playlist_position asc
+  `,
     [playlistId]
   );
 
@@ -184,6 +185,7 @@ app.get("/playlists/:playlistId", async (req, res) => {
   res.json({
     ...playlist.rows[0],
     playlist_tracks: tracks.rows.map((t) => ({
+      id: t.id,
       playlist_position: t.playlist_position,
       track_artist: t.track_artist,
       track_title: t.track_title,
@@ -195,6 +197,91 @@ app.get("/playlists/:playlistId", async (req, res) => {
         : null,
     })),
   });
+});
+
+app.delete("/playlists/:playlistId", async (req, res) => {
+  const playlistId = Number(req.params.playlistId);
+
+  const result = await pool.query(`delete from playlists where id = $1 returning id`, [playlistId]);
+
+  if (result.rowCount === 0) return res.status(404).json({ error: "Playlist not found" });
+  return res.json({ ok: true, id: result.rows[0].id });
+});
+
+app.delete("/tracks/:trackId", async (req, res) => {
+  const trackId = Number(req.params.trackId);
+
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    // 1) Find the playlist_id for this track
+    const found = await client.query(`select playlist_id from playlist_tracks where id = $1`, [
+      trackId,
+    ]);
+
+    if (found.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Track not found" });
+    }
+
+    const playlistId = found.rows[0].playlist_id as number;
+
+    // 2) Delete the track
+    await client.query(`delete from playlist_tracks where id = $1`, [trackId]);
+
+    // 3) Renumber positions in that playlist
+    await client.query(
+      `
+      with ordered as (
+        select id,
+               row_number() over (order by playlist_position asc, id asc) as new_pos
+        from playlist_tracks
+        where playlist_id = $1
+      )
+      update playlist_tracks pt
+      set playlist_position = ordered.new_pos
+      from ordered
+      where pt.id = ordered.id
+      `,
+      [playlistId]
+    );
+
+    await client.query("COMMIT");
+    return res.json({ ok: true, id: trackId, playlist_id: playlistId });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  } finally {
+    client.release();
+  }
+});
+
+app.patch("/playlists/:playlistId/favourite", async (req, res) => {
+  const playlistId = Number(req.params.playlistId);
+  const value = !!req.body?.favourite;
+
+  const result = await pool.query(
+    `update playlists set favourite = $1 where id = $2 returning id, favourite`,
+    [value, playlistId]
+  );
+
+  if (result.rowCount === 0) return res.status(404).json({ error: "Playlist not found" });
+  return res.json(result.rows[0]);
+});
+
+app.patch("/tracks/:trackId/favourite", async (req, res) => {
+  const trackId = Number(req.params.trackId);
+  const value = !!req.body?.favourite;
+
+  const result = await pool.query(
+    `update playlist_tracks set favourite = $1 where id = $2 returning id, favourite`,
+    [value, trackId]
+  );
+
+  if (result.rowCount === 0) return res.status(404).json({ error: "Track not found" });
+  return res.json(result.rows[0]);
 });
 
 app.get("/health", (_req, res) => res.json({ ok: true }));

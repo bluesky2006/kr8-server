@@ -44,6 +44,24 @@ const CreatePlaylistSchema = z.object({
   playlist_tracks: z.array(TrackSchema).default([]),
 });
 
+const PositiveIdParamSchema = z.coerce.number().int().positive();
+const UpdateFavouriteSchema = z.object({
+  favourite: z.boolean(),
+});
+
+function parsePositiveIdParam(paramValue: string, paramName: string, res: express.Response) {
+  const parsed = PositiveIdParamSchema.safeParse(paramValue);
+  if (!parsed.success) {
+    res.status(400).json({
+      error: `Invalid ${paramName} param`,
+      issues: parsed.error.issues,
+    });
+    return null;
+  }
+
+  return parsed.data;
+}
+
 // ---- Routes ----
 
 app.use((req, _res, next) => {
@@ -52,7 +70,8 @@ app.use((req, _res, next) => {
 });
 
 app.post("/users/:userId/playlists", async (req, res) => {
-  const userIdParam = Number(req.params.userId);
+  const userIdParam = parsePositiveIdParam(req.params.userId, "userId", res);
+  if (userIdParam == null) return;
 
   const parsed = CreatePlaylistSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -131,7 +150,8 @@ app.post("/users/:userId/playlists", async (req, res) => {
 });
 
 app.get("/users/:userId/playlists", async (req, res) => {
-  const userId = Number(req.params.userId);
+  const userId = parsePositiveIdParam(req.params.userId, "userId", res);
+  if (userId == null) return;
 
   const result = await pool.query(
     `
@@ -147,7 +167,8 @@ app.get("/users/:userId/playlists", async (req, res) => {
 });
 
 app.get("/playlists/:playlistId", async (req, res) => {
-  const playlistId = Number(req.params.playlistId);
+  const playlistId = parsePositiveIdParam(req.params.playlistId, "playlistId", res);
+  if (playlistId == null) return;
 
   const playlist = await pool.query(
     `
@@ -200,7 +221,8 @@ app.get("/playlists/:playlistId", async (req, res) => {
 });
 
 app.delete("/playlists/:playlistId", async (req, res) => {
-  const playlistId = Number(req.params.playlistId);
+  const playlistId = parsePositiveIdParam(req.params.playlistId, "playlistId", res);
+  if (playlistId == null) return;
 
   const result = await pool.query(`delete from playlists where id = $1 returning id`, [playlistId]);
 
@@ -209,7 +231,8 @@ app.delete("/playlists/:playlistId", async (req, res) => {
 });
 
 app.delete("/tracks/:trackId", async (req, res) => {
-  const trackId = Number(req.params.trackId);
+  const trackId = parsePositiveIdParam(req.params.trackId, "trackId", res);
+  if (trackId == null) return;
 
   const client = await pool.connect();
   try {
@@ -259,8 +282,17 @@ app.delete("/tracks/:trackId", async (req, res) => {
 });
 
 app.patch("/playlists/:playlistId/favourite", async (req, res) => {
-  const playlistId = Number(req.params.playlistId);
-  const value = !!req.body?.favourite;
+  const playlistId = parsePositiveIdParam(req.params.playlistId, "playlistId", res);
+  if (playlistId == null) return;
+
+  const parsedBody = UpdateFavouriteSchema.safeParse(req.body);
+  if (!parsedBody.success) {
+    return res.status(400).json({
+      error: "Invalid payload",
+      issues: parsedBody.error.issues,
+    });
+  }
+  const value = parsedBody.data.favourite;
 
   const result = await pool.query(
     `update playlists set favourite = $1 where id = $2 returning id, favourite`,
@@ -272,8 +304,17 @@ app.patch("/playlists/:playlistId/favourite", async (req, res) => {
 });
 
 app.patch("/tracks/:trackId/favourite", async (req, res) => {
-  const trackId = Number(req.params.trackId);
-  const value = !!req.body?.favourite;
+  const trackId = parsePositiveIdParam(req.params.trackId, "trackId", res);
+  if (trackId == null) return;
+
+  const parsedBody = UpdateFavouriteSchema.safeParse(req.body);
+  if (!parsedBody.success) {
+    return res.status(400).json({
+      error: "Invalid payload",
+      issues: parsedBody.error.issues,
+    });
+  }
+  const value = parsedBody.data.favourite;
 
   const result = await pool.query(
     `update playlist_tracks set favourite = $1 where id = $2 returning id, favourite`,
